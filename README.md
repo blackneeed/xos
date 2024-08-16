@@ -5,4 +5,4 @@ Xnix is a operating system made in C and Assembly, with a fully custom bootloade
 ## Building and Running
 |VSCode|Terminal|
 |:----:|:------:|
-|Build task: Build and Run||`$ ./toolkit.sh build;./toolkit.sh run`|
+|Build task: Build and Run|`$ ./toolkit.sh build;./toolkit.sh run`|
