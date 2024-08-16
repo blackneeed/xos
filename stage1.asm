@@ -29,12 +29,37 @@ main:
     int 10h
     mov bp, [save_bp]
 
+    ; resetting the disk controller
+    ; http://www.ctyme.com/intr/rb-0605.htm
+    mov ah, 00h
+    mov dl, [boot_disk_number]
+    int 13h
 
-    jmp $
+    ; reading the next sectors on the disk
+    ; http://www.ctyme.com/intr/rb-0607
+    push dx
+    stc
+    mov ah, 02h
+    mov al, 4 ; read 4 sectors
+    mov ch, 0x00 ; cylinder number = 0x00
+    mov cl, 0x02 ; sector number = 0x02
+    mov dh, 0x00 ; head number = 0x00
+    mov dl, [boot_disk_number]
+    push ax
+    xor ax, ax
+    mov es, ax ; load at 0:?
+    pop ax
+    mov bx, 0x7e00 ; load at ?:0x7e00
+    ; (load at 0:0x7e00)
+    int 13h
+    sti
+    pop dx
+
+    jmp 0:0x7e00 ; pass control to stage2
 
 print_string:
-    ; push bx
-    ; push ax
+    push bx
+    push ax
     .loop:
     cmp [bx], byte 0
     je .end
