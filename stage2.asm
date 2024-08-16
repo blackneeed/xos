@@ -1,26 +1,26 @@
 [bits 16]
 [org 0x7e00]
 
+%include "config.inc"
+
 main:
     mov bx, success
     call print_string
 
+    cli
     jmp $
 
 print_string:
-    push bx
-    push ax
-    .loop:
-    cmp [bx], byte 0
-    je .end
-    mov ah, 0eh
     mov al, [bx]
-    int 0x10
+    test al, al
+    jz .end
+    
+    mov ah, 0eh
+    int 10h
     inc bx
-    jmp .loop
-    .end:
-    pop ax
-    pop bx
+    jmp print_string
+
+.end:
     ret
 
 success: db "Successfully loaded stage2 of Xnix bootloader!", 0xD, 0xA, 0
