@@ -14,13 +14,11 @@ print_string:
     cmp [bx], byte 0
     je .end
     ; ah=0eh int 10h -- BUG: If the write causes the screen to scroll, BP is destroyed by BIOSes for which AH=06h destroys BP
-    push ax
     mov [save_bp], bp
     mov ah, 0eh
     mov al, [bx]
     int 0x10
     mov bp, [save_bp]
-    pop ax
     inc bx
     jmp .loop
     .end:
